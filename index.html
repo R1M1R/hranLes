@@ -93,7 +93,7 @@
             gap: 10px;
             z-index: 12;
             width: 95%;
-            max-width: 900px;
+            max-width: 1200px;
             pointer-events: none;
         }
 
@@ -312,7 +312,7 @@
         }
         .joystick-zone {
             position: absolute;
-            bottom: 20px;
+            bottom: calc(20px + env(safe-area-inset-bottom));
             width: 140px; height: 140px;
             pointer-events: auto;
             border-radius: 50%;
@@ -331,18 +331,20 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             pointer-events: none;
         }
-        #joy-left  { left: 30px; }
-        #joy-right { right: 30px; }
+        #joy-left  { left: calc(20px + env(safe-area-inset-left)); }
+        #joy-right { right: calc(20px + env(safe-area-inset-right)); }
 
         #dash-btn-mobile {
             position: absolute;
-            bottom: 180px; right: 40px;
-            width: 64px; height: 64px;
-            border-radius: 32px;
+            bottom: calc(160px + env(safe-area-inset-bottom));
+            right: calc(170px + env(safe-area-inset-right));
+            width: 60px; height: 60px;
+            border-radius: 30px;
             background: rgba(0,255,204,0.2);
             border: 2px solid var(--accent);
             color: white;
             font-weight: 900;
+            font-size: 0.75rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -354,12 +356,12 @@
         }
 
         body.is-mobile #mobile-controls  { display: block; }
-        body.is-mobile #inventory        { top: 90px; left: 15px; bottom: auto; flex-direction: column; gap: 5px; }
-        body.is-mobile #btn-open-craft   { top: 90px; right: 15px; bottom: auto; height: 60px; }
-        body.is-mobile #top-hud          { top: 15px; }
-        body.is-mobile #story-text       { top: 160px; }
-        body.is-mobile #build-ui         { bottom: 180px; }
-        body.is-mobile #btn-auto-attack  { top: auto; bottom: 100px; right: 15px; }
+        body.is-mobile #inventory        { top: 90px; left: 10px; bottom: auto; flex-direction: column; gap: 4px; }
+        body.is-mobile #btn-open-craft   { top: 90px; right: 10px; bottom: auto; height: 56px; font-size: 0.9rem; padding: 8px 14px; }
+        body.is-mobile #top-hud          { top: 10px; gap: 6px; }
+        body.is-mobile #story-text       { top: 155px; }
+        body.is-mobile #build-ui         { bottom: calc(170px + env(safe-area-inset-bottom)); }
+        body.is-mobile #btn-auto-attack  { top: auto; bottom: calc(90px + env(safe-area-inset-bottom)); right: 10px; font-size: 0.75rem; padding: 6px 10px; }
 
         /* Overlay screens */
         .overlay-screen {
@@ -446,12 +448,12 @@
             background: var(--ui-bg);
             border: 2px solid var(--accent);
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            max-width: 90%;
-            max-height: 80vh;
+            gap: 15px;
+            width: min(95vw, 800px);
+            max-height: min(90vh, 700px);
             overflow-y: auto;
             box-shadow: 0 10px 50px rgba(0,0,0,0.8);
             pointer-events: auto;
@@ -570,31 +572,31 @@
             <div class="craft-card">
                 <div class="craft-name">🌿 <span id="t-cr-heal">Исцеление</span></div>
                 <div class="craft-desc" id="t-crd-heal">Восстанавливает 40 здоровья. Мгновенное применение.</div>
-                <div class="craft-cost"><span style="color:#e6ccb2">5 Дерева</span> <span style="color:#f72585">2 Кристалла</span></div>
+                <div class="craft-cost" id="t-cost-heal"></div>
                 <button class="btn craft-btn" id="btn-do-heal">Создать</button>
             </div>
             <div class="craft-card">
                 <div class="craft-name">🧱 <span id="t-cr-wall">Стена</span></div>
                 <div class="craft-desc" id="t-crd-wall">Прочная баррикада, задерживает врагов.</div>
-                <div class="craft-cost"><span style="color:#e6ccb2">10 Дерева</span> <span style="color:#caf0f8">5 Камня</span></div>
+                <div class="craft-cost" id="t-cost-wall"></div>
                 <button class="btn craft-btn btn-special" id="btn-do-wall">Выбрать место</button>
             </div>
             <div class="craft-card">
                 <div class="craft-name">⚙ <span id="t-cr-turret">Турель</span></div>
                 <div class="craft-desc" id="t-crd-turret">Автоматически стреляет по врагам.</div>
-                <div class="craft-cost"><span style="color:#e6ccb2">10 Дерева</span> <span style="color:#caf0f8">10 Камня</span> <span style="color:#f72585">5 Крист.</span></div>
+                <div class="craft-cost" id="t-cost-turret"></div>
                 <button class="btn craft-btn btn-special" id="btn-do-turret">Выбрать место</button>
             </div>
             <div class="craft-card">
                 <div class="craft-name">🧚 <span id="t-cr-wisp">Дух-Помощник</span></div>
                 <div class="craft-desc" id="t-crd-wisp">Мощный магнит для всех ресурсов.</div>
-                <div class="craft-cost"><span style="color:#f72585">15 Кристаллов</span></div>
+                <div class="craft-cost" id="t-cost-wisp"></div>
                 <button class="btn craft-btn btn-epic" id="btn-do-wisp">Призвать</button>
             </div>
             <div class="craft-card" style="border-color:#f72585;">
                 <div class="craft-name">💎 <span id="t-cr-ad">БЕСПЛАТНЫЕ КРИСТАЛЛЫ</span></div>
                 <div class="craft-desc" id="t-crd-ad">Посмотреть рекламу и получить +25 Кристаллов.</div>
-                <div class="craft-cost"><span style="color:#f72585">+25 Кристаллов</span></div>
+                <div class="craft-cost" id="t-cost-ad"></div>
                 <button class="btn craft-btn ad-btn" id="btn-do-ad">Смотреть</button>
             </div>
         </div>
@@ -607,7 +609,11 @@
     <h1 id="t-death-title">СВЕТ ПОГАС</h1>
     <p id="t-death-sub" style="font-size:1.4rem;margin-bottom:10px;color:#aaa;">Тьма поглотила рощу.</p>
     <div class="score-text" id="score-death">Убито врагов: 0</div>
-    <button class="btn" id="btn-respawn" style="font-size:1.2rem;padding:18px 40px;border-color:var(--danger);background:rgba(255,42,95,0.2);">Возродиться (Реклама)</button>
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:center;width:100%;">
+        <button class="btn" id="btn-respawn" style="font-size:1.2rem;padding:18px 40px;border-color:var(--danger);background:rgba(255,42,95,0.2);">Возродиться (Реклама)</button>
+        <button class="btn btn-special" id="btn-restart-death" style="font-size:1rem;padding:12px 30px;">НАЧАТЬ ЗАНОВО</button>
+        <button class="btn" id="btn-lb-death" style="font-size:0.9rem;padding:10px 25px;border-color:rgba(255,215,0,0.5);background:rgba(255,215,0,0.1);color:#ffd700;">🏆 РЕЙТИНГ</button>
+    </div>
 </div>
 
 <!-- Win screen -->
@@ -615,13 +621,19 @@
     <h1 id="t-win-title">ОСТРОВ ОЧИЩЕН</h1>
     <p id="t-win-sub" style="font-size:1.4rem;margin-bottom:10px;color:#aaa;text-align:center;">Свет Алтаря поглотил тьму навсегда.</p>
     <div class="score-text" id="score-win">Убито врагов: 0</div>
-    <button class="btn btn-special" id="btn-restart-win" style="font-size:1.2rem;padding:18px 40px;">ИГРАТЬ СНОВА</button>
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:center;width:100%;">
+        <button class="btn btn-special" id="btn-restart-win" style="font-size:1.2rem;padding:18px 40px;">ИГРАТЬ СНОВА</button>
+        <button class="btn" id="btn-lb-win" style="font-size:0.9rem;padding:10px 25px;border-color:rgba(255,215,0,0.5);background:rgba(255,215,0,0.1);color:#ffd700;">🏆 РЕЙТИНГ</button>
+    </div>
 </div>
 
 <!-- Pause screen -->
 <div id="screen-pause" class="overlay-screen">
     <h1 id="t-pause-title">ПАУЗА</h1>
-    <button class="btn btn-special" id="btn-resume" style="font-size:1.2rem;padding:18px 40px;">ПРОДОЛЖИТЬ</button>
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
+        <button class="btn btn-special" id="btn-resume" style="font-size:1.2rem;padding:18px 40px;">ПРОДОЛЖИТЬ</button>
+        <button class="btn" id="btn-lb-pause" style="font-size:0.9rem;padding:10px 25px;border-color:rgba(255,215,0,0.5);background:rgba(255,215,0,0.1);color:#ffd700;">🏆 РЕЙТИНГ</button>
+    </div>
 </div>
 
 <script>
@@ -639,13 +651,18 @@ const KG_Dict = {
         pauseTitle: "ПАУЗА", resume: "ПРОДОЛЖИТЬ", score: "Убито врагов: ",
         lvl: "Ур.", lvlUp: "УРОВЕНЬ ПОВЫШЕН!", noSpace: "Нет места!", bossWarning: "КРОВАВАЯ ЛУНА",
         buffHaste: "СКОРОСТЬ!", buffMulti: "ЗАЛП!", buffShield: "ЩИТ!",
+        autoOn: "АВТО: ВКЛ", autoOff: "АВТО: ВЫКЛ",
         craftBtn: "КРАФТ", craftTitle: "СОЗДАНИЕ ПРЕДМЕТОВ",
         crHeal: "Исцеление", crdHeal: "Восстанавливает 40 здоровья.", btnCreate: "Создать",
         crWall: "Стена", crdWall: "Прочная баррикада, задерживает врагов.", btnPlace: "Выбрать место",
         crTurret: "Турель", crdTurret: "Автоматически стреляет по врагам.",
         crWisp: "Дух-Помощник", crdWisp: "Магнит для ресурсов.", btnSummon: "Призвать",
         crAd: "БЕСПЛАТНЫЕ КРИСТАЛЛЫ", crdAd: "Реклама: +25 Кристаллов.", btnAd: "Смотреть",
+        costHeal: "5 🪵  2 💎", costWall: "10 🪵  5 🪨", costTurret: "10 🪵  10 🪨  5 💎", costWisp: "15 💎", costAd: "+25 💎",
+        noRes: "НЕТ РЕСУРСОВ", adErr: "ОШИБКА", adBlock: "АДБЛОК", loading: "ЗАГРУЗКА...",
         cancel: "ОТМЕНА", build: "ПОСТРОИТЬ", closeMenu: "ЗАКРЫТЬ",
+        lbTitle: "🏆 РЕЙТИНГ", lbEmpty: "Нет данных", lbYou: "Ты",
+        restartBtn: "НАЧАТЬ ЗАНОВО", lbBtn: "🏆 РЕЙТИНГ",
         intro: ["Тьма спала тысячи лет...", "Но теперь она вернулась, чтобы поглотить Свет.", "Проснись, Хранитель. Твой дозор начался."],
         stories: [
             "Авто-атака найдет врагов. Просто беги!",
@@ -666,13 +683,18 @@ const KG_Dict = {
         pauseTitle: "PAUSED", resume: "RESUME", score: "Enemies killed: ",
         lvl: "Lvl.", lvlUp: "LEVEL UP!", noSpace: "No Space!", bossWarning: "BLOOD MOON",
         buffHaste: "HASTE!", buffMulti: "MULTI-SHOT!", buffShield: "SHIELD!",
+        autoOn: "AUTO: ON", autoOff: "AUTO: OFF",
         craftBtn: "CRAFT", craftTitle: "CRAFTING MENU",
         crHeal: "Heal", crdHeal: "Restores 40 HP.", btnCreate: "Create",
         crWall: "Wall", crdWall: "Durable barricade to delay enemies.", btnPlace: "Place",
         crTurret: "Turret", crdTurret: "Automatically shoots nearby enemies.",
         crWisp: "Wisp Helper", crdWisp: "Resource magnet.", btnSummon: "Summon",
         crAd: "FREE CRYSTALS", crdAd: "Watch ad to get +25 Crystals.", btnAd: "Watch",
+        costHeal: "5 🪵  2 💎", costWall: "10 🪵  5 🪨", costTurret: "10 🪵  10 🪨  5 💎", costWisp: "15 💎", costAd: "+25 💎",
+        noRes: "NO RESOURCES", adErr: "ERROR", adBlock: "AD BLOCKER", loading: "LOADING...",
         cancel: "CANCEL", build: "BUILD", closeMenu: "CLOSE",
+        lbTitle: "🏆 LEADERBOARD", lbEmpty: "No data", lbYou: "You",
+        restartBtn: "RESTART", lbBtn: "🏆 LEADERBOARD",
         intro: ["The Darkness slept for thousands of years...", "But now it has returned to consume the Light.", "Awaken, Keeper. Your watch has begun."],
         stories: [
             "Auto-attack finds enemies. Just run!",
@@ -730,6 +752,18 @@ function applyTranslations() {
     setTxt('btn-cancel-build', d.cancel);
     setTxt('btn-confirm-build', d.build);
     setTxt('btn-close-craft-menu', d.closeMenu);
+    // Craft costs (dynamic, not hardcoded in HTML)
+    const setCost = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+    setCost('t-cost-heal',   `<span style="color:#e6ccb2">${d.costHeal.split('  ')[0]}</span> <span style="color:#f72585">${d.costHeal.split('  ')[1]}</span>`);
+    setCost('t-cost-wall',   `<span style="color:#e6ccb2">${d.costWall.split('  ')[0]}</span> <span style="color:#caf0f8">${d.costWall.split('  ')[1]}</span>`);
+    setCost('t-cost-turret', `<span style="color:#e6ccb2">${d.costTurret.split('  ')[0]}</span> <span style="color:#caf0f8">${d.costTurret.split('  ')[1]}</span> <span style="color:#f72585">${d.costTurret.split('  ')[2]}</span>`);
+    setCost('t-cost-wisp',   `<span style="color:#f72585">${d.costWisp}</span>`);
+    setCost('t-cost-ad',     `<span style="color:#f72585">${d.costAd}</span>`);
+    // Screen buttons
+    setTxt('btn-restart-death', d.restartBtn);
+    setTxt('btn-lb-death', d.lbBtn);
+    setTxt('btn-lb-win', d.lbBtn);
+    setTxt('btn-lb-pause', d.lbBtn);
     if (window.kg_game) window.kg_game.updateUI();
 }
 
@@ -738,21 +772,115 @@ function injectYandexSDK() {
         const script = document.createElement('script');
         script.src = "https://yandex.ru/games/sdk/v2";
         script.onload = () => {
-            if (typeof YaGames !== 'undefined') {
-                YaGames.init().then(_ysdk => {
-                    kg_ysdk = _ysdk;
-                    if (kg_ysdk.features && kg_ysdk.features.LoadingAPI) {
-                        kg_ysdk.features.LoadingAPI.ready();
-                    }
-                    let envLang = 'ru';
-                    if (kg_ysdk.environment && kg_ysdk.environment.i18n) envLang = kg_ysdk.environment.i18n.lang;
-                    kg_currentLang = (['ru','be','kk','uk'].includes(envLang)) ? 'ru' : 'en';
-                    applyTranslations();
-                }).catch(() => {});
-            }
+            if (typeof YaGames === 'undefined') return;
+            YaGames.init().then(_ysdk => {
+                kg_ysdk = _ysdk;
+                // Notify Yandex that game loaded
+                if (kg_ysdk.features && kg_ysdk.features.LoadingAPI) {
+                    kg_ysdk.features.LoadingAPI.ready();
+                }
+                // Language
+                let envLang = 'ru';
+                try { if (kg_ysdk.environment && kg_ysdk.environment.i18n) envLang = kg_ysdk.environment.i18n.lang; } catch(e) {}
+                kg_currentLang = (['ru','be','kk','uk'].includes(envLang)) ? 'ru' : 'en';
+                applyTranslations();
+
+                // Auth player (for leaderboard name)
+                try {
+                    kg_ysdk.getPlayer({ scopes: false }).then(player => {
+                        kg_yaPlayer = player;
+                        // Load best score from cloud saves
+                        player.getData(['bestScore']).then(data => {
+                            if (data && data.bestScore) kg_bestScore = data.bestScore;
+                        }).catch(() => {});
+                    }).catch(() => {});
+                } catch(e) {}
+
+            }).catch(() => {});
         };
         document.head.appendChild(script);
     } catch (e) {}
+}
+
+/* Yandex player reference */
+let kg_yaPlayer = null;
+let kg_bestScore = 0;
+
+function kg_submitScore(score) {
+    if (score <= kg_bestScore) return;
+    kg_bestScore = score;
+    try {
+        if (kg_ysdk && kg_ysdk.getLeaderboards) {
+            kg_ysdk.getLeaderboards().then(lb => {
+                lb.setLeaderboardScore('grove_keeper_score', score).catch(() => {});
+            }).catch(() => {});
+        }
+        if (kg_yaPlayer) {
+            kg_yaPlayer.setData({ bestScore: score }).catch(() => {});
+        }
+    } catch(e) {}
+}
+
+function kg_showLeaderboard() {
+    try {
+        if (kg_ysdk && kg_ysdk.getLeaderboards) {
+            kg_ysdk.getLeaderboards().then(lb => {
+                lb.getLeaderboardEntries('grove_keeper_score', { quantityTop: 10, includeUser: true }).then(data => {
+                    _renderLeaderboard(data);
+                }).catch(() => { _renderLeaderboard(null); });
+            }).catch(() => { _renderLeaderboard(null); });
+        } else {
+            _renderLeaderboard(null);
+        }
+    } catch(e) { _renderLeaderboard(null); }
+}
+
+function _renderLeaderboard(data) {
+    const d = KG_Dict[kg_currentLang];
+    const existing = document.getElementById('kg-lb-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'kg-lb-overlay';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,8,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(10px);';
+
+    let rows = '';
+    if (data && data.entries && data.entries.length > 0) {
+        data.entries.forEach((e, i) => {
+            const isMe = data.userEntry && e.player && data.userEntry.player && e.player.uniqueID === data.userEntry.player.uniqueID;
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}.`;
+            rows += `<div style="display:flex;gap:16px;align-items:center;padding:10px 20px;border-radius:10px;background:${isMe?'rgba(0,255,204,0.1)':'rgba(255,255,255,0.03)'};border:1px solid ${isMe?'rgba(0,255,204,0.3)':'rgba(255,255,255,0.06)'};margin-bottom:6px;">
+                <span style="font-size:1.2rem;width:36px;text-align:center;">${medal}</span>
+                <span style="flex:1;color:${isMe?'#00ffcc':'#f8fafc'};font-weight:${isMe?900:700};">${e.player.publicName || d.lbYou}</span>
+                <span style="color:#ffd700;font-weight:900;">${e.score}</span>
+            </div>`;
+        });
+    } else {
+        rows = `<div style="color:#888;padding:30px;">${d.lbEmpty}</div>`;
+    }
+
+    overlay.innerHTML = `
+        <div style="max-width:400px;width:90%;font-family:'Nunito',sans-serif;">
+            <h2 style="color:#ffd700;text-align:center;font-size:1.8rem;margin-bottom:20px;font-weight:900;">${d.lbTitle}</h2>
+            <div style="max-height:50vh;overflow-y:auto;">${rows}</div>
+            <button onclick="document.getElementById('kg-lb-overlay').remove()" style="margin-top:20px;width:100%;padding:14px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;text-transform:uppercase;">${d.closeMenu}</button>
+        </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('pointerdown', (e) => { if (e.target === overlay) overlay.remove(); });
+}
+
+function kg_showInterstitial() {
+    try {
+        if (kg_ysdk && kg_ysdk.adv) {
+            kg_ysdk.adv.showFullscreenAdv({
+                callbacks: {
+                    onOpen:  () => { if (window.kg_game) window.kg_game.sfx.enabled = false; },
+                    onClose: () => { if (window.kg_game) window.kg_game.sfx.enabled = true; window.kg_game.lastTime = performance.now(); },
+                    onError: () => { if (window.kg_game) window.kg_game.sfx.enabled = true; }
+                }
+            });
+        }
+    } catch(e) {}
 }
 
 /* ============================================================
@@ -763,11 +891,13 @@ function uiError(btnId, customMsg) {
     if (!btn) return;
     if (!btn.dataset.origText) btn.dataset.origText = btn.innerText;
     btn.classList.add('error-shake');
-    btn.innerText = customMsg || "НЕТ РЕСУРСОВ";
+    const d = KG_Dict[kg_currentLang];
+    btn.innerText = customMsg || d.noRes;
     clearTimeout(btn._errTimer);
     btn._errTimer = setTimeout(() => {
         btn.innerText = btn.dataset.origText;
         btn.classList.remove('error-shake');
+        btn.dataset.origText = '';
     }, 1000);
 }
 
@@ -1816,6 +1946,7 @@ class KG_MainGame {
         btn('btn-cancel-build',    () => this.cancelBuild());
         btn('btn-confirm-build',   () => this.confirmBuild());
         btn('btn-respawn',         () => this.respawn());
+        btn('btn-restart-death',   () => { this.resetGameData(true); this.startIntro(); });
         btn('btn-restart-win',     () => { this.resetGameData(true); this.startIntro(); });
         btn('btn-resume',          () => this.togglePause());
         btn('btn-do-heal',         () => this.actionCraft('heal'));
@@ -1823,6 +1954,9 @@ class KG_MainGame {
         btn('btn-do-turret',       () => this.actionCraft('turret'));
         btn('btn-do-wisp',         () => this.actionCraft('wisp'));
         btn('btn-do-ad',           () => this.rewardAdCrystals());
+        btn('btn-lb-death',        () => kg_showLeaderboard());
+        btn('btn-lb-win',          () => kg_showLeaderboard());
+        btn('btn-lb-pause',        () => kg_showLeaderboard());
 
         // Click on menu background to start
         document.getElementById('screen-menu').addEventListener('click', (e) => {
@@ -2153,50 +2287,60 @@ class KG_MainGame {
     rewardAdCrystals() {
         const btn = document.getElementById('btn-do-ad');
         if (btn && !btn.dataset.origText) btn.dataset.origText = btn.innerText;
-        if (btn) btn.innerText = "ЗАГРУЗКА...";
+        const d = KG_Dict[kg_currentLang];
+        if (btn) btn.innerText = d.loading;
         this.sfx.enabled = false;
 
         const reward = () => {
             this.player.inv.crystal += 25;
+            this.sfx.enabled = true;
             this.sfx.play('pickup');
             this.updateCraftUI(); this.updateUI();
             this.addFloatText("+25 💎", this.player.x, this.player.y-60, "#f72585", true);
         };
         const resumeFromAd = () => {
-            if (btn) btn.innerText = btn.dataset.origText || KG_Dict[kg_currentLang].btnAd;
+            if (btn) { btn.innerText = btn.dataset.origText || d.btnAd; btn.dataset.origText = ''; }
             this.sfx.enabled = true;
         };
 
         try {
             if (typeof YaGames !== 'undefined' && kg_ysdk && kg_ysdk.adv) {
-                kg_ysdk.adv.showRewardedVideo({ callbacks: { onRewarded: reward, onClose: resumeFromAd, onError: () => { resumeFromAd(); uiError('btn-do-ad','ОШИБКА'); } } });
-            } else { resumeFromAd(); uiError('btn-do-ad','АДБЛОК'); }
-        } catch(e) { resumeFromAd(); uiError('btn-do-ad','ОШИБКА'); }
+                kg_ysdk.adv.showRewardedVideo({ callbacks: {
+                    onRewarded: reward,
+                    onClose: resumeFromAd,
+                    onError: () => { resumeFromAd(); uiError('btn-do-ad', d.adErr); }
+                }});
+            } else { resumeFromAd(); uiError('btn-do-ad', d.adBlock); }
+        } catch(e) { resumeFromAd(); uiError('btn-do-ad', d.adErr); }
     }
 
     respawn() {
         const btn = document.getElementById('btn-respawn');
         if (btn && !btn.dataset.origText) btn.dataset.origText = btn.innerText;
-        if (btn) btn.innerText = "ЗАГРУЗКА...";
+        const d = KG_Dict[kg_currentLang];
+        if (btn) btn.innerText = d.loading;
 
         const reward = () => {
-            if (btn) btn.innerText = btn.dataset.origText || KG_Dict[kg_currentLang].respawn;
+            if (btn) { btn.innerText = btn.dataset.origText || d.respawn; btn.dataset.origText = ''; }
             this.resetGameData(false);
+        };
+        const onClose = () => {
+            if (this.state === 'DEAD' && btn) { btn.innerText = btn.dataset.origText || d.respawn; btn.dataset.origText = ''; }
         };
         try {
             if (typeof YaGames !== 'undefined' && kg_ysdk && kg_ysdk.adv) {
                 kg_ysdk.adv.showRewardedVideo({ callbacks: {
                     onRewarded: reward,
-                    onClose:    () => { if (this.state === 'DEAD' && btn) btn.innerText = btn.dataset.origText || KG_Dict[kg_currentLang].respawn; },
-                    onError:    () => { if (btn) btn.innerText = btn.dataset.origText || KG_Dict[kg_currentLang].respawn; uiError('btn-respawn','ОШИБКА'); }
+                    onClose:    onClose,
+                    onError:    () => { onClose(); uiError('btn-respawn', d.adErr); }
                 }});
             } else {
-                if (btn) btn.innerText = btn.dataset.origText || KG_Dict[kg_currentLang].respawn;
-                uiError('btn-respawn','АДБЛОК');
+                onClose();
+                uiError('btn-respawn', d.adBlock);
             }
         } catch(e) {
-            if (btn) btn.innerText = btn.dataset.origText || KG_Dict[kg_currentLang].respawn;
-            uiError('btn-respawn','ОШИБКА');
+            onClose();
+            uiError('btn-respawn', d.adErr);
         }
     }
 
@@ -2204,15 +2348,21 @@ class KG_MainGame {
         this.state = 'WIN';
         document.getElementById('ui-layer').classList.remove('active');
         document.getElementById('screen-win').classList.add('active');
-        document.getElementById('score-win').innerText = `${KG_Dict[kg_currentLang].score}${this.enemiesKilled}`;
+        const d = KG_Dict[kg_currentLang];
+        document.getElementById('score-win').innerText = `${d.score}${this.enemiesKilled}`;
         this.entities = this.entities.filter(e => !(e instanceof KG_Enemy));
+        kg_submitScore(this.enemiesKilled);
+        setTimeout(() => kg_showInterstitial(), 1000);
     }
 
     gameOver() {
         this.state = 'DEAD';
         document.getElementById('ui-layer').classList.remove('active');
         document.getElementById('screen-death').classList.add('active');
-        document.getElementById('score-death').innerText = `${KG_Dict[kg_currentLang].score}${this.enemiesKilled}`;
+        const d = KG_Dict[kg_currentLang];
+        document.getElementById('score-death').innerText = `${d.score}${this.enemiesKilled}`;
+        kg_submitScore(this.enemiesKilled);
+        setTimeout(() => kg_showInterstitial(), 1500);
     }
 
     resetGameData(fullReset = false) {
@@ -2239,8 +2389,11 @@ class KG_MainGame {
     toggleAutoAttack() {
         this.autoAttackEnabled = !this.autoAttackEnabled;
         const btn = document.getElementById('btn-auto-attack');
+        const d = KG_Dict[kg_currentLang];
         if (btn) {
-            btn.innerText = `🎯 АВТО: ${this.autoAttackEnabled ? 'ВКЛ' : 'ВЫКЛ'}`;
+            const onStr  = d.autoOn  || 'AUTO: ON';
+            const offStr = d.autoOff || 'AUTO: OFF';
+            btn.innerText = `🎯 ${this.autoAttackEnabled ? onStr : offStr}`;
             btn.style.borderColor = this.autoAttackEnabled ? 'rgba(0,255,204,0.4)' : 'rgba(255,42,95,0.4)';
         }
     }
@@ -2390,6 +2543,10 @@ class KG_MainGame {
             this.timeOfDay = 0; this.dayCount++; this.activeStoryIndex = 0;
             this.isBloodMoon = (this.dayCount % 10 === 0);
             if (this.isBloodMoon) this.shake(10, 2.0);
+            // Show interstitial every 5 days (not during blood moon — too intense)
+            if (this.dayCount % 5 === 0 && !this.isBloodMoon) {
+                setTimeout(() => kg_showInterstitial(), 500);
+            }
         }
 
         const absoluteTime = (this.dayCount-1) + this.timeOfDay;
@@ -2654,6 +2811,7 @@ function bootGame() {
     if (window.kg_game) { window.kg_game.destroy(); window.kg_game = null; }
     applyTranslations();
     window.kg_game = new KG_MainGame();
+    // SDK loads async — if lang changes, game.updateUI() is called from applyTranslations()
     injectYandexSDK();
 }
 
